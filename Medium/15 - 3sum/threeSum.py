@@ -1,7 +1,7 @@
-def three_sum_bf(nums: list[int]) -> list[list[int]]:
+def three_sum_brute(nums: list[int]) -> list[list[int]]:
     """
     Finds all unique triplets of the array elements that sum to zero.  This version of the function is a brute force
-    method, which tests every combination of i, j, k-th elements in the array.
+    method, which tests every combination of i, j, k-th elements in the array.  Time complexity O(n^3) (unacceptable!)
     """
     n = len(nums)
     res = []
@@ -49,6 +49,38 @@ def three_sum_hash(nums: list[int]) -> list[list[int]]:
                     res.append(res_check)
     return res
 
+def three_sum_pointer(nums: list[int]) -> list[list[int]]:
+    # create empty list to store the unique triplets and sort the list (O(n log(n))
+    res = []
+    nums.sort()
+
+    # start a loop through all elements in nums minus the last two, as the index will be used as the lower end of the
+    # triplet, and we will need two elements after every element picked up by the loop.
+    for i in range(len(nums)-2):
+        # skip any leading duplicates that occur starting at the beginning of the list
+        if i > 0 and nums[i] == nums[i-1]:
+            continue
+        # establish l and r pointers that occur after i
+        l, r = i + 1, len(nums) - 1
+        # find possible permutations summing to 0 using the (i) iteration as the lower bound, and moving the two
+        # pointers ahead of it inward from their starting positions
+        while l < r:
+            sum = nums[i] + nums[l] + nums[r]
+            if sum > 0:
+                r -= 1
+            elif sum < 0:
+                l += 1
+            else:
+                # if a triplet summing to zero is found, append the results list with the triplet, and move both
+                # pointers inward to the unique number, accounting for potential index errors
+                res.append([nums[i], nums[l], nums[r]])
+                while l < len(nums) - 2 and nums[l] == nums[l+1]:
+                    l += 1
+                while r > l and nums[r] == nums[r-1]:
+                    r -= 1
+                l += 1; r -= 1
+    return res
 
 nums = [-1,0,1,2,-1,-4]
-print(three_sum_hash(nums))
+# nums = [0,0,0]
+print(three_sum_pointer(nums))
