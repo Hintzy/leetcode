@@ -1,4 +1,10 @@
+import time
+
+
 def test_series(func, test_list):
+    print(f'\"{func}\" Results')
+    print('______________________________\n')
+
     for i, case in enumerate(test_list):
         try:
             if func(**case['input']) == case['output']:
@@ -18,3 +24,11 @@ def test_series(func, test_list):
 
         finally:
             pass
+
+
+def compare_runtimes(inputs, *args):
+    for func_name in args:
+        start = time.time()
+        func_name(inputs)
+        duration = time.time() - start
+        print(f'{func_name} duration: {duration} s')

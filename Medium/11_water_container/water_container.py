@@ -4,7 +4,7 @@ The brute force solution to this problem will take the form of a recursive funct
  go from 0 to n for the right element, and 0 to right.
 """
 
-height = [x for x in range(20)]
+heights = [x for x in range(20)]
 
 def maxArea_brute(height: list[int]) -> int:
     n = len(height)
@@ -30,6 +30,9 @@ j starts at end of array
     - regardless of if volume is larger or not, continue to increment the smaller of the two bound heights until lower = upper
 """
 
+
+# Code from March 2023
+"""
 def maxArea(height: list[int]):
 
     def volume(i, j, height):
@@ -57,3 +60,40 @@ def maxArea(height: list[int]):
 
 height_1 = [1, 2, 3, 4, 5, 6, 7, 8]
 print(maxArea(height_1))
+"""
+
+# Revisiting problem in June 2023 with a fresh attempt
+
+# set a helper function to calculate volume of a given pair of indices
+# initialize volume as 0, define a function that will calculate volume
+# while j > i, move smaller pointer inward until a greater value than current is found, calculate volume as max between
+# current max and current calculated.  Continue process until j passes i
+
+
+def maxArea(height: list[int]) -> int:
+
+    def volume(i: int, j: int, lst: list[int]):
+        vol = (j - i) * (min(lst[i], lst[j]))
+        return vol
+
+    i, j = 0, len(height) - 1
+    max_vol = max(0, volume(i, j, height))
+
+    while i < j:
+        if height[i] <= height[j]:
+            cur = height[i]
+            while height[i+1] <= cur and i < j:
+                i += 1
+            i += 1
+            max_vol = max(max_vol, volume(i, j, height))
+
+        else:
+            cur = height[j]
+
+            while height[j-1] <= cur and i < j:
+                j -= 1
+            j -= 1
+            max_vol = max(max_vol, volume(i, j, height))
+
+    return max_vol
+

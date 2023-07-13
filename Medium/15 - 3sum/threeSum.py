@@ -1,3 +1,6 @@
+# from ds_templates import test_series
+# from test_cases import cases
+
 def three_sum_brute(nums: list[int]) -> list[list[int]]:
     """
     Finds all unique triplets of the array elements that sum to zero.  This version of the function is a brute force
@@ -49,6 +52,8 @@ def three_sum_hash(nums: list[int]) -> list[list[int]]:
                     res.append(res_check)
     return res
 
+
+# _____________________________________________________________________________________________
 def three_sum_pointer(nums: list[int]) -> list[list[int]]:
     # create empty list to store the unique triplets and sort the list (O(n log(n))
     res = []
@@ -81,6 +86,46 @@ def three_sum_pointer(nums: list[int]) -> list[list[int]]:
                 l += 1; r -= 1
     return res
 
-nums = [-1,0,1,2,-1,-4]
-# nums = [0,0,0]
-print(three_sum_pointer(nums))
+# _____________________________________________________________________________________________
+# Returning to this problem ~2 months later retrying from scratch
+
+
+def three_sum_pointer_2(nums: list[int]) -> list[list[int]]:
+    # create empty list to store the unique triplets and sort the list (O(nlog(n))
+    res = []
+    nums.sort()
+
+    # loop through each element in the list starting from index 0, using the pointer solution to twoSum to find a
+    # combination of 3 numbers that sum to zero.  When changing the L and R pointers, advance them in a manner where
+    # they skip over duplicates.  This is the case whether a valid solution has been found or not.  Once the L & R
+    # pointers meet, advance the loop to the next number in a manner where it skips duplicates and stops before
+    # len(list)-3
+
+    for i, val in enumerate(nums):
+        if 0 < i < len(nums)-2 and val == nums[i+1] and val == nums[i+2]:
+            continue
+        l, r = i + 1, len(nums) - 1
+        while i < len(nums) - 2 and l < r:
+            sum = val + nums[l] + nums[r]
+            if sum > 0:
+                while nums[r-1] == nums[r] and l < r:
+                    r -= 1
+                r -= 1
+            elif sum < 0:
+                while nums[l + 1] == nums[l] and l < r:
+                    l += 1
+                l += 1
+            else:
+                res.append([nums[i], nums[l], nums[r]])
+                break
+
+    return res
+
+
+list_1 = [-1,0,1,2,-1,-4]
+
+print(three_sum_pointer_2(list_1))
+
+# test_series.test_series(three_sum_pointer, cases)
+
+

@@ -2,7 +2,7 @@ from ds_templates import test_series
 from test_cases import tests
 
 
-def valid_sudoku(board: list[list[str]]) -> bool:
+def valid_sudoku_1(board: list[list[str]]) -> bool:
     def valid_check(hm: dict, char):
         if not char.isdigit():
             return True
@@ -39,4 +39,30 @@ def valid_sudoku(board: list[list[str]]) -> bool:
     return True
 
 
-test_series.test_series(valid_sudoku, tests)
+# test_series.test_series(valid_sudoku_1, tests)
+
+
+# __________________________________________________________________________________________
+# Attempting to recreate Neetcode's method from memory (watched his video a few weeks ago)
+
+def valid_sudoku_neet(board: list[list[str]]) -> bool:
+    rows = [[] for _ in range(9)]
+    cols = [[] for _ in range(9)]
+    sects = {}
+
+    for row in range(9):
+        for col in range(9):
+            num = board[row][col]
+            if num == '.':
+                continue
+            elif num in rows[row] or num in cols[col] or num in sects.setdefault((row//3, col//3), []):
+                return False
+            else:
+                rows[row].append(num)
+                cols[col].append(num)
+                sects[row//3, col//3].append(num)
+
+    return True
+
+
+test_series.test_series(valid_sudoku_neet, tests)

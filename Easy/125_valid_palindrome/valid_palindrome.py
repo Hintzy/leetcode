@@ -47,6 +47,7 @@ class Solution:
         v3_duration = time() - v3_start
         print(v3_duration)
 
+
 if __name__ == '__main__':
     sol = Solution()
 
