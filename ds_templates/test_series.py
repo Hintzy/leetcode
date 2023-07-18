@@ -7,13 +7,14 @@ def test_series(func, test_list):
 
     for i, case in enumerate(test_list):
         try:
-            if func(**case['input']) == case['output']:
+            result = func(**case['input'])
+            if result == case['output']:
                 print(f'Test Case {i + 1}: PASS')
             else:
                 print(f'Test Case {i + 1}: FAIL')
             print(f'\nInput: {case["input"]}')
             print(f'Expected Output: {case["output"]}')
-            print(f'Actual Output: {func(**case["input"])}\n')
+            print(f'Actual Output: {result}\n')
 
 
         except IndexError:
