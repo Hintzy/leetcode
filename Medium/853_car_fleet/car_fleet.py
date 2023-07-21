@@ -1,11 +1,13 @@
 """
 Problem logic:
 
-Calculate the time it will take the lead car to reach the destination (distance target - position car / speed car),
-increment a car fleet value by one
-Pop next value from the stack, while the car behind it has equal or lesser time that car ahead continue to pop values
-until you reach a value that takes longer, at which point you increment the car fleet count again.
-Go through the entire stack until you reach the end.
+Calculate the time it will take the lead car to reach the destination (distance target - position car / speed car).
+Store those values in a list.  Zip those values with the start positions and sort the list in reverse order by position.
+Initialize the fleets list with the first car, since it will always be a fleet. Iterate through the remainder of the
+list to see if there's any collisions with cars behind the first. If there's a collision simply continue onto the next
+vehicle in the queue. If there's no collision, append the car fleet list with the last car and continue.
+
+Result is the length of the car fleet list.
 """
 
 from ds_templates import test_series
@@ -13,27 +15,16 @@ from test_cases import cases
 
 
 def carFleet(target: int, position: list[int], speed: list[int]) -> int:
-    times = []
-    fleet_count = 1
-    for i, pos in enumerate(position):
-        time = round(((target - pos) / speed[i]), 2)
-        times.append(time)
-    # create a lead time value and increment fleet
-    lead_time = times.pop(0)
-    # while there are values in the speed stack keep popping values off the stack until you hit one that's greater than
-    # the lead time.  This value becomes the next lead time and increment the fleet count by 1
-    while times:
-        next_car = times.pop(0)
-        if next_car > lead_time:
-            lead_time = next_car
-            fleet_count += 1
+    times = [((target - position[i]) / speed[i]) for i in range(len(position))]
+    paired = sorted(zip(position, times), reverse=True)
+    fleets = [paired[0]]
+    if len(paired) > 1:
+        for pos, time in paired[1:]:
+            if time <= fleets[-1][-1]:
+                continue
+            else:
+                fleets.append((pos, time))
+    return len(fleets)
 
-    return fleet_count
-
-# tar = 100
-# pos = [10, 20, 30]
-# spds = [10, 20, 10]
-#
-# print(carFleet(tar, pos, spds))
 
 test_series.test_series(carFleet, cases)
