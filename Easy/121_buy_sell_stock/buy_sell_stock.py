@@ -54,18 +54,40 @@ from math import ceil
 
 from test_cases import tests, test_series
 
-def maxProfit(prices):
-    """
-    :type prices: List[int]
-    :rtype: Int
-    """
-    min_price = float('inf')
+# def maxProfit(prices):
+#     """
+#     :type prices: List[int]
+#     :rtype: Int
+#     """
+#     min_price = float('inf')
+#     max_profit = 0
+#     for price in prices:
+#         if price < min_price:
+#             min_price = price
+#         else:
+#             max_profit = max(max_profit, price - min_price)
+#     return max_profit
+#
+# test_series(maxProfit, tests)
+
+"""
+Redoing problem from scratch for review:
+
+Logic - Two pointers (low & high).  
+Iterate though all elements in the list. Low is the running minimum of values in the list.  Max is the running max until
+a new low is found, then the max is set equal to that current new low.
+"""
+
+def max_profit(prices: list[int]) -> int:
+    low, high = prices[0], prices[0]
     max_profit = 0
     for price in prices:
-        if price < min_price:
-            min_price = price
+        if price < low:
+            low = price
         else:
-            max_profit = max(max_profit, price - min_price)
+            max_profit = max(max_profit, (price-low))
     return max_profit
 
-test_series(maxProfit, tests)
+test_1 = [1,7,19,6,4,3,1, 55]
+print(max_profit(test_1))
+
