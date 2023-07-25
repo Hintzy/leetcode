@@ -32,24 +32,44 @@ print(largest_rect(test_1))
 
 """
 Neetcode's logic, my code. 
+
+Populate
 """
+
+from ds_templates import test_series
+from test_cases import cases
 
 
 def largest_rect(heights: list[int]) -> int:
-    stack = [(0, heights[0])]
-    max_area = stack[0][1]
-    for i, num in enumerate(heights):
+    stack, max_area = [], 0
+    for i, height in enumerate(heights):
         if i == 0:
-            continue
-        stack.append((i, num))
-        for j, val in stack:
-            while num < val:
-                ind, curr_val = stack.pop(j)
-                area = curr_val * (i - j)
-                max_area = max(area, max_area)
+            stack.append([i, height])
+        elif height > heights[i-1]:
+            stack.append([i, height])
+        elif height == 0:
+            while stack:
+                j, val = stack.pop()
+                area = (i - j) * val
+                max_area = max(max_area, area)
+        elif height < heights[i-1]:
+            while stack and height < stack[-1][1]:
+                j, val = stack.pop()
+                area = (i - j) * val
+                max_area = max(max_area, area)
+            if not stack:
+                stack.append([j, height])
+            elif height == stack[-1][1]:
+                stack.append([i, height])
+            else:
+                stack.append([j, height])
+    for i, height in stack:
+        area = (len(heights) - i) * height
+        max_area = max(max_area, area)
+
     return max_area
 
 
-test_lab = [1, 2, 3, 4, 0, 1, 2, 3, 4, 5, 0, 1, 2]
-print(largest_rect(test_lab))
-
+# test_1 = [4,2,0,3,2,4,3,4]
+# print(largest_rect(test_1))
+test_series.test_series(largest_rect, cases)
