@@ -59,8 +59,8 @@ def largest_rect(heights: list[int]) -> int:
                 max_area = max(max_area, area)
             if not stack:
                 stack.append([j, height])
-            elif height == stack[-1][1]:
-                stack.append([i, height])
+            # elif height == stack[-1][1]:
+            #     stack.append([i, height])
             else:
                 stack.append([j, height])
     for i, height in stack:
