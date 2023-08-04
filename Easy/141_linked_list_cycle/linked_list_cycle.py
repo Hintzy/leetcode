@@ -1,3 +1,6 @@
+from ds_templates import single_linked_list as sll
+
+
 class ListNode:
     def __init__(self, val=None, next=None):
         self.val = val
@@ -111,7 +114,19 @@ LL1.list_to_looped_SLL(list_1, 5)
 print(LL1.has_loop_hash())
 #print(LL1.has_loop())
 
+"""
+Revisiting this problem after several months break.
+"""
 
-
+def has_loop(head) -> bool:
+    if head and head.next and head.next.next:
+        slow = head.next
+        fast = head.next.next
+        while fast.next and fast.next.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                return True
+    return False
 
 

@@ -3,7 +3,7 @@ class ListNode:
         self.val = val
         self.next = next
 
-    def __str__(self):
+    def __repr__(self):
         return f'{self.val}, {self.next}'
 
 
@@ -11,13 +11,15 @@ class LinkedList:
     def __init__(self, root=None):
         self.root = root
 
-    def __str__(self):
+    def __repr__(self):
         return f'LinkedList[{self.root}]'
 
     def __iter__(self):
         return (x for x in self.root)
 
     def list_to_SLL(self, a_list):
+        if not a_list:
+            return None
         head = ListNode(a_list[0])
         self.root = head
         curr = head
@@ -26,8 +28,9 @@ class LinkedList:
             curr = curr.next
         return head
 
-list_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+if __name__ == '__main__':
+    list_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
-LL1 = LinkedList()
-LL1.list_to_SLL(list_1)
-print(LL1)
+    LL1 = LinkedList()
+    LL1.list_to_SLL(list_1)
+    print(LL1)

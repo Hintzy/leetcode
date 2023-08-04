@@ -12,8 +12,8 @@ def test_series(func, test_list):
                 print(f'Test Case {i + 1}: PASS')
             else:
                 print(f'Test Case {i + 1}: FAIL')
-            print(f'\nInput: {case["input"]}')
-            print(f'Expected Output: {case["output"]}')
+            print(f"\nInput: {case['input']}")
+            print(f"Expected Output: {case['output']}")
             print(f'Actual Output: {result}\n')
 
 

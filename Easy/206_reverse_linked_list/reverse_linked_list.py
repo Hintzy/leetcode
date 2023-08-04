@@ -46,9 +46,9 @@ class LinkedList:
             cur = next
             next = next.next
         cur.next = prev
-        self.head = cur
         return self.head
 
+    # a recursive solution to reversing a linked list
     def reverse_list_recurse(self, head: Optional[ListNode]) -> Optional[ListNode]:
         # Base case: if the current node is None or the next node is None, return the current node
         if not head or not head.next:
@@ -66,13 +66,30 @@ class LinkedList:
         # Return the head node (which will be the new head of the reversed list)
         return new_head
 
+    def rev_LL(self) -> Optional[ListNode]:
+        if self.head is None:
+            return None
+        last, cur = None, self.head
+        next = cur.next
+        while next is not None:
+            cur.next = last
+            last = cur
+            cur = next
+            next = cur.next
+        cur.next = last
+        self.head = cur
+        return self.head
 
-list_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+
+# creating a linked list from an array
+list_1 = []
 LL1 = LinkedList()
 LL1.populate(list_1)
 print(LL1)
-print(LL1.reverse_list_recurse(LL1.head))
-"""
-We are given a head node that has a point to the next node. 
-Traverse through the list recursively, base case is 'node.next is None'
-"""
+# LL1.rev_LL(LL1.head)
+print(LL1.rev_LL())
+# print(LL1.reverse_list_recurse(LL1.head))
+
+# fresh attempt at redoing this problem months later
+
