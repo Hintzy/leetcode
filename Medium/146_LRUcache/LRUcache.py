@@ -1,8 +1,7 @@
 class Node:
-    def __init__(self, val=None, next=None, prev=None):
-        self.val = val
-        self.next = next
-        self.prev = prev
+    def __init__(self, key=None, val=None, next=None, prev=None):
+        self.key, self.val = key, val
+        self.next = self.prev = None
 
     def __repr__(self):
         return f'{self.val}, {self.next}'
@@ -13,68 +12,58 @@ class LRUCache:
     def __init__(self, capacity: int):
         self.cap = capacity
         self.cache = {}
-        self.head = None
-        self.tail = None
+
+        # head is Least Recently Used (LRU), tail is Most Recently Used (MRU)
+        self.head, self.tail = Node(0, 0), Node(0, 0)
+        self.head.next, self.tail.prev = self.tail, self.head
 
     def __repr__(self):
         return f'{self.head}'
+
+    def remove(self, node):
+        prev, next = node.prev, node.next
+        prev.next, next.prev = next, prev
+
+    # insert node at right end of list
+    def insert(self, node):
+        prev, next = self.tail.prev, self.tail
+        node.prev, node.next = prev, next
+        prev.next, self.tail.prev = node, node
 
     def get(self, key: int) -> int:
         # if the item is found, move it to the head of the linked list and then return the value stored in the node
         if key in self.cache:
             item = self.cache[key]
-            item.val = value
-            prev, next = item.prev, item.next
-            if prev:
-                prev.next = next
-                next.prev = prev
-            item.prev, item.next = None, self.head
-            self.head = self.head.prev
+            self.remove(item)
+            self.insert(item)
             return item.val
         return -1
-
 
     def put(self, key: int, value: int) -> None:
         # if the key is in the cache, update the value and move it to the front of the list queue
         if key in self.cache:
             item = self.cache[key]
             item.val = value
-            prev, next = item.prev, item.next
-            if prev:
-                prev.next = next
-                next.prev = prev
-            item.prev, item.next = None, self.head
-            self.head = self.head.prev
+            self.remove(item)
+            self.insert(item)
 
-        # otherwise we're creating a new node under several condition
+        # otherwise we're creating a new node with several conditions
         else:
-            # if the cache is empty, create a new head node with value and default prev/next
-            if len(self.cache) == 0:
-                new_node = Node(value)
-                self.head = new_node
-                self.tail = self.head
+            # if the cache is not full, create a new node and add to right end of queue
+            if len(self.cache) < self.cap:
+                new_node = Node(key, value)
                 self.cache[key] = new_node
+                self.insert(new_node)
 
-            # if the cache isn't empty, but also is not at capcity, add a new node to the end of the list and reassign
-            # the tail pointer
-            elif len(self.cache) < self.cap:
-                new_node = Node(value)
-                self.cache[key] = new_node
-                new_node.prev = self.tail
-                self.tail.next = new_node
-                self.tail = self.tail.next
-
-            # if the cache is full, delete the key from the cache associated with the head node, advance the head node,
-            # and clear the head prev reference. Then add a new node to the tail and reassign references
+            # if the cache is full, delete the key from the cache associated with the left end of list and remove the
+            # left most item from list. Then insert the new item.
             else:
-                del self.cache[self.head.val]
-                self.head = self.head.next
-                self.head.prev = None
-                new_node = Node(value)
+                node = self.head.next
+                del self.cache[node.key]
+                self.remove(node)
+                new_node = Node(key, value)
                 self.cache[key] = new_node
-                new_node.prev = self.tail
-                self.tail.next = new_node
-                self.tail = self.tail.next
+                self.insert(new_node)
 
 
 
@@ -90,6 +79,8 @@ obj.put(7, 7)  # creates key: val pair of 5, 55
 obj.put(8, 8)  # creates key: val pair of 5, 55
 obj.put(9, 9)  # creates key: val pair of 5, 55
 obj.put(10, 10)  # creates key: val pair of 5, 55
+print(obj)
+print(obj.cache)
 obj.put(11, 11)  # creates key: val pair of 5, 55
 print(obj)
 print(obj.cache)
