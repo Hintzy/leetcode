@@ -8,32 +8,20 @@ def test_series(func, test_list):
 
     for i, case in enumerate(test_list):
         try:
-            result = func(**case['input'])
-            if result == case['output']:
-                print(f'Test Case {i + 1}: PASS')
-            else:
-                print(f'Test Case {i + 1}: FAIL')
-            print(f"\nInput: {case['input']}")
-            print(f"Expected Output: {case['output']}")
-            print(f'Actual Output: {result}\n')
+            actual_output = func(**case['input'])
+            result = 'PASS' if actual_output == case['output'] else 'FAIL'
 
-        except IndexError as error:
-            print(f'Test Case {i + 1}: FAIL')
-            print(f"\nInput: {case['input']}")
-            print(f"Expected Output: {case['output']}")
-            print(f'Actual Output: {error}', flush=True)
-            tb.print_exc()
-
-        except KeyError as error:
-            print(f'Test Case {i + 1}: FAIL')
-            print(f"\nInput: {case['input']}")
-            print(f"Expected Output: {case['output']}")
-            print(f'Actual Output: {error}', flush=True)
-            tb.print_exc()
+        except Exception:
+            result, actual_output = 'ERROR', None
+            tb_str = tb.format_exc()
 
         finally:
-            pass
-
+            print(f'Test Case {i + 1}: {result}')
+            print(f"\nInput: {case['input']}")
+            print(f"Expected Output: {case['output']}")
+            print(f'Actual Output: {actual_output}\n')
+            if result == 'ERROR':
+                print(f'\033[91m{tb_str}\033[0m')
 
 def test_case(func, test_list, case_num):
     print(f'\"{func}\" Results')
@@ -41,36 +29,25 @@ def test_case(func, test_list, case_num):
 
     case = test_list[case_num-1]
     try:
-        result = func(**case['input'])
-        if result == case['output']:
-            print(f'Test Case {case_num}: PASS')
-        else:
-            print(f'Test Case {case_num}: FAIL')
-        print(f"\nInput: {case['input']}")
-        print(f"Expected Output: {case['output']}")
-        print(f'Actual Output: {result}\n')
+        actual_output = func(**case['input'])
+        result = 'PASS' if actual_output == case['output'] else 'FAIL'
 
-    except IndexError:
-        print(f'Test Case {case_num}: FAIL')
-        print(f"\nInput: {case['input']}")
-        print(f"Expected Output: {case['output']}")
-        print(f'Actual Output: ', flush=True)
-        tb.print_exc()
-
-    except KeyError as error:
-        print(f'Test Case {case_num}: FAIL')
-        print(f"\nInput: {case['input']}")
-        print(f"Expected Output: {case['output']}")
-        print(f'Actual Output: ', flush=True)
-        tb.print_exc()
+    except Exception:
+        result, actual_output = 'ERROR', None
+        tb_str = tb.format_exc()
 
     finally:
-        pass
+        print(f'Test Case {case_num}: {result}')
+        print(f"\nInput: {case['input']}")
+        print(f"Expected Output: {case['output']}")
+        print(f'Actual Output: {actual_output}\n')
+        if result == 'ERROR':
+            print(f'\033[91m{tb_str}\033[0m')
 
 
 def compare_runtimes(inputs, *args):
-    for func_name in args:
+    for func in args:
         start = time.time()
-        func_name(inputs)
+        func(inputs)
         duration = time.time() - start
-        print(f'{func_name} duration: {duration} s')
+        print(f'{func} duration: {duration} s')
