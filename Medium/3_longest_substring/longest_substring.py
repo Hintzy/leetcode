@@ -1,3 +1,7 @@
+from ds_templates import test_series as ts
+from test_cases import cases
+
+
 """
 This first method works, but it's the brute force slow method.
 It iterates through each index of the string as a starting position
@@ -41,11 +45,9 @@ class Solution:
 # sol = Solution()
 # print(sol.lengthOfLongestSubstring(case_1))
 
-"""
-Leetcode solution that uses a 'sliding window'
-"""
+# Leetcode solution that uses a sliding window
 
-
+"""
 def lengthOfLongestSubstring2(s: str) -> int:
     seen = {}
     max_sl = 0
@@ -61,4 +63,44 @@ def lengthOfLongestSubstring2(s: str) -> int:
         seen[s[r]] = r
     return max_sl
 
-print(lengthOfLongestSubstring2('abcdefg'))
+print(lengthOfLongestSubstring2('abcdefg'))"""
+
+
+# revisiting this problem after several months.  Using sliding window approach
+
+"""
+Left/right pointers of the sliding window, both start at zero.
+    - a hashmap for the letters that are currently in the string
+    - variable (int) for max substring length
+
+
+Iterate through all positions with the right pointer. (curr = s[r)
+
+At each point, check if right pointer character is in 'seen'.  
+
+If is is in seen, while the character is in seen advance the left pointer, deleting each char it passes from the hashmap.
+    While curr in seen:
+        del s[l]
+        l += 1
+        
+If it is not, set the length of the max substring length.  (max_sl = max(max_sl, r-l+1))
+"""
+
+
+def longestSubstring_sw(s: str) -> int:
+    seen = {}
+    max_sl = 0
+    l, r = 0, 0
+    for r in range(len(s)):
+        curr = s[r]
+        while curr in seen:
+            del seen[s[l]]
+            l += 1
+        seen[curr] = True
+        max_sl = max(max_sl, r-l+1)
+
+    return max_sl
+
+
+ts.test_series(longestSubstring_sw, cases)
+
