@@ -3,7 +3,7 @@ import traceback as tb
 
 
 def test_series(func, test_list):
-    print(f'\"{func}\" Results')
+    print(f'\"{func.__name__}\" Results')
     print('______________________________\n')
 
     for i, case in enumerate(test_list):
@@ -24,7 +24,7 @@ def test_series(func, test_list):
                 print(f'\033[91m{tb_str}\033[0m')
 
 def test_case(func, test_list, case_num):
-    print(f'\"{func}\" Results')
+    print(f'\"{func.__name__}\" Results')
     print('______________________________\n')
 
     case = test_list[case_num-1]
@@ -45,9 +45,12 @@ def test_case(func, test_list, case_num):
             print(f'\033[91m{tb_str}\033[0m')
 
 
-def compare_runtimes(inputs, *args):
-    for func in args:
+def compare_runtimes(inputs, test_runs: int=1000, *functions):
+    runtimes = {}
+    for func in functions:
         start = time.time()
-        func(inputs)
+        for _ in range(test_runs):
+            func(*inputs)
         duration = time.time() - start
-        print(f'{func} duration: {duration} s')
+        runtimes[func.__name__] = duration
+        print(f'{func.__name__} duration: {duration:.5f} s')
